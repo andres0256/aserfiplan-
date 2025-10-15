@@ -1,0 +1,38 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: content-box;
+}
+
+body {
+    background-image: url(logo.png1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.buttons {
+    min-width: 1200px;
+    display: flex;
+    justify-content:center;
+    align-items:center ;
+    height: 100vh;
+}
+
+.buttons a {
+    text-decoration: none;
+    font-size: 28px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    background: #040035;
+    color: #209ee7;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px #fff(246, 244, 244, 0.5);  
+    transition: all .4s ease-in-out;
+}
+
+.buttons a:hover{
+    transform: scale(2.0);
+}
