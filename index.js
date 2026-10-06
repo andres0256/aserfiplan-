@@ -108,16 +108,29 @@ const recortar = (h) => {
   return r;
 };
 
+// Llama a Gemini y reintenta si Google está saturado (errores temporales 429/500/503)
+async function generar(contents) {
+  for (let intento = 1; ; intento++) {
+    try {
+      return await ai.models.generateContent({
+        model: GEMINI_MODEL,
+        contents,
+        config: { systemInstruction: systemPrompt(), tools },
+      });
+    } catch (e) {
+      const temporal = [429, 500, 503].includes(e.status) || /UNAVAILABLE|high demand/i.test(e.message);
+      if (!temporal || intento >= 4) throw e;
+      await new Promise((r) => setTimeout(r, intento * 3000));
+    }
+  }
+}
+
 async function responder(tel, texto) {
   const hist = memoria.get(tel) ?? [];
   hist.push({ role: "user", parts: [{ text: texto }] });
 
   for (let i = 0; i < 6; i++) {
-    const res = await ai.models.generateContent({
-      model: GEMINI_MODEL,
-      contents: hist,
-      config: { systemInstruction: systemPrompt(), tools },
-    });
+    const res = await generar(hist);
     hist.push(res.candidates[0].content);
 
     const llamadas = res.functionCalls;
