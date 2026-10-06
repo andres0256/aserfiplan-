@@ -6,7 +6,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 const {
   WA_TOKEN, WA_PHONE_ID, WA_VERIFY_TOKEN, WA_API_VERSION = "v23.0", BUSINESS_NUMBER = "",
-  GEMINI_API_KEY, GEMINI_MODEL = "gemini-2.5-flash",
+  GEMINI_API_KEY, GEMINI_MODEL = "gemini-3.8-flash",
   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN,
   GMAIL_USER, GMAIL_APP_PASSWORD, OWNER_EMAIL, PORT = 3000,
 } = process.env;
