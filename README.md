@@ -32,7 +32,7 @@ Luego abre el archivo `.env` y llena cada valor (paso 2).
 **WhatsApp (Meta)**
 - `WA_PHONE_ID`: en tu app de Meta, WhatsApp > Configuración de la API, "Identificador del número de teléfono".
 - `WA_TOKEN`: el token temporal dura solo 24 horas. Para producción crea uno permanente: Meta Business > Configuración > Usuarios del sistema > crear usuario > asignar la app > generar token con los permisos `whatsapp_business_messaging` y `whatsapp_business_management`.
-- `WA_VERIFY_TOKEN`: invéntalo tú (cualquier palabra secreta). Lo usarás en el paso 4.
+- `WA_VERIFY_TOKEN`: invéntalo tú (cualquier palabra secreta). Lo usarás en el paso 5.
 - `BUSINESS_NUMBER`: el número del negocio, solo dígitos con el indicativo (ejemplo `573013422266`).
 
 **Gemini (IA gratis)**
@@ -43,15 +43,24 @@ Luego abre el archivo `.env` y llena cada valor (paso 2).
 1. Entra a https://console.cloud.google.com y crea un proyecto.
 2. Activa la "Google Calendar API".
 3. Configura la pantalla de consentimiento OAuth y **publícala en modo "En producción"**. Si la dejas en modo de prueba, el token vence a los 7 días y el bot deja de agendar.
-4. Crea unas credenciales "ID de cliente OAuth" de tipo "Aplicación web" y agrega como URI de redirección `https://developers.google.com/oauthplayground`. Copia el ID y el secreto en `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`.
-5. Entra a https://developers.google.com/oauthplayground, pulsa la rueda de configuración, marca "Use your own OAuth credentials" y pega tu ID y secreto.
-6. En el paso 1 del Playground escribe el permiso `https://www.googleapis.com/auth/calendar`, autoriza con la cuenta cuyo calendario se va a usar, y en el paso 2 pulsa "Exchange authorization code for tokens". Copia el "Refresh token" en `GOOGLE_REFRESH_TOKEN`.
+4. Crea unas credenciales "ID de cliente OAuth" de tipo **"Aplicación de escritorio"**. Copia el ID y el secreto en `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` del archivo `.env`.
+5. Ejecuta `npm run google-token`. Te muestra un enlace: ábrelo, autoriza con la cuenta cuyo calendario se va a usar, y la terminal te imprime la línea `GOOGLE_REFRESH_TOKEN=...` para pegar en el `.env`.
 
 **Correo (aviso de cada reunión)**
 - Activa la verificación en dos pasos en la cuenta de Gmail y crea una "contraseña de aplicación" en https://myaccount.google.com/apppasswords.
 - `GMAIL_USER`: la cuenta que envía. `GMAIL_APP_PASSWORD`: la contraseña de 16 letras. `OWNER_EMAIL`: el correo del asesor que recibe los avisos.
 
-## 3. Ejecutar
+## 3. Probar primero sin WhatsApp (recomendado)
+
+Para comprobar que la IA funciona, solo necesitas `GEMINI_API_KEY` en el `.env`:
+
+```bash
+npm run consola
+```
+
+Escribe en la terminal como si fueras el cliente (por ejemplo "hola, quiero comprar un lote"). Si ya llenaste las credenciales de Google, también puedes pedir una reunión y ver si la crea. Con Ctrl+C sales.
+
+## 4. Ejecutar con WhatsApp
 
 ```bash
 npm start
@@ -59,7 +68,7 @@ npm start
 
 Debe aparecer: `Bot de Aserfiplan listo en el puerto 3000`.
 
-## 4. Conectar con WhatsApp
+## 5. Conectar con WhatsApp
 
 Meta necesita una dirección pública con HTTPS.
 
@@ -71,7 +80,7 @@ Luego, en tu app de Meta: WhatsApp > Configuración > Webhook:
 - Token de verificación: el mismo valor de `WA_VERIFY_TOKEN`
 - Pulsa "Verificar y guardar" y suscríbete al campo **messages**.
 
-## 5. Probar
+## 6. Probar
 
 Escribe "Hola" al WhatsApp del negocio desde otro celular. Si tu app de Meta está en modo desarrollo, primero agrega ese celular como número de prueba.
 

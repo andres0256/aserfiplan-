@@ -185,4 +185,21 @@ app.post("/webhook", (req, res) => {
   responder(msg.from, texto).then((r) => enviar(msg.from, r)).catch(console.error);
 });
 
-app.listen(PORT, () => console.log(`Bot de Aserfiplan listo en el puerto ${PORT}`));
+if (process.argv.includes("--consola")) {
+  // Modo de prueba: conversas con el bot en la terminal, sin WhatsApp
+  const { createInterface } = await import("node:readline/promises");
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  console.log("Modo consola: escribe como si fueras el cliente (Ctrl+C para salir)\n");
+  while (true) {
+    const t = await rl.question("Tú: ");
+    if (!t.trim()) continue;
+    try {
+      const r = await responder("consola", t);
+      console.log(`\nBot: ${r.replace(/^BOTONES:/m, "[Botones]")}\n`);
+    } catch (e) {
+      console.error("\nError:", e.message, "\n");
+    }
+  }
+} else {
+  app.listen(PORT, () => console.log(`Bot de Aserfiplan listo en el puerto ${PORT}`));
+}
